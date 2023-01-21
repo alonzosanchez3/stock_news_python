@@ -9,6 +9,14 @@ aa_parameters = {
   "symbol": STOCK_NAME,
   "apikey": aa_api_key
 }
+na_api_key = '4b9f0d794d4a44fa8cd5bf35fdc471d1'
+na_parameters = {
+  'apiKey': na_api_key,
+  'q': COMPANY_NAME,
+  "pageSize": 3,
+  "searchIn": 'title'
+
+}
 
 STOCK_ENDPOINT = "https://www.alphavantage.co/query"
 NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
@@ -26,18 +34,28 @@ print(yesterday_data)
 
 day_before_yesterday_data = data_list[1]['4. close']
 
-#TODO 3. - Find the positive difference between 1 and 2. e.g. 40 - 20 = -20, but the positive difference is 20. Hint: https://www.w3schools.com/python/ref_func_abs.asp
 
-#TODO 4. - Work out the percentage difference in price between closing price yesterday and closing price the day before yesterday.
+difference = abs(float(yesterday_data) - float(day_before_yesterday_data))
 
-#TODO 5. - If TODO4 percentage is greater than 5 then print("Get News").
+
+diff_percent = (difference / float(yesterday_data)) * 100
+print(diff_percent)
+
+if diff_percent > 1:
+  print('Get News')
 
     ## STEP 2: https://newsapi.org/
     # Instead of printing ("Get News"), actually get the first 3 news pieces for the COMPANY_NAME.
 
 #TODO 6. - Instead of printing ("Get News"), use the News API to get articles related to the COMPANY_NAME.
+response = requests.get(NEWS_ENDPOINT, na_parameters)
+data = response.json()['articles']
+articles_list = data[:3]
+print(articles_list)
 
 #TODO 7. - Use Python slice operator to create a list that contains the first 3 articles. Hint: https://stackoverflow.com/questions/509211/understanding-slice-notation
+
+
 
 
     ## STEP 3: Use twilio.com/docs/sms/quickstart/python
