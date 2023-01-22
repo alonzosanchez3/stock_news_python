@@ -1,15 +1,17 @@
 import requests
 import os
+from twilio.rest import Client
+
 
 STOCK_NAME = "TSLA"
 COMPANY_NAME = "Tesla Inc"
-aa_api_key = 'VR3AMUW4SWKADF2R'
+aa_api_key = 'VR3AMUW4SWK'
 aa_parameters = {
   "function": "TIME_SERIES_DAILY",
   "symbol": STOCK_NAME,
   "apikey": aa_api_key
 }
-na_api_key = '4b9f0d794d4a44fa8cd5bf35fdc471d1'
+na_api_key = '4b9f0d794d4a44fa8cd5b'
 na_parameters = {
   'apiKey': na_api_key,
   'q': COMPANY_NAME,
@@ -18,11 +20,9 @@ na_parameters = {
 
 }
 
+
 STOCK_ENDPOINT = "https://www.alphavantage.co/query"
 NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
-
-    ## STEP 1: Use https://www.alphavantage.co/documentation/#daily
-# When stock price increase/decreases by 5% between yesterday and the day before yesterday then print("Get News").
 
 response = requests.get(STOCK_ENDPOINT, params=aa_parameters)
 response.raise_for_status()
@@ -44,27 +44,22 @@ print(diff_percent)
 if diff_percent > 1:
   print('Get News')
 
-    ## STEP 2: https://newsapi.org/
-    # Instead of printing ("Get News"), actually get the first 3 news pieces for the COMPANY_NAME.
-
-#TODO 6. - Instead of printing ("Get News"), use the News API to get articles related to the COMPANY_NAME.
 response = requests.get(NEWS_ENDPOINT, na_parameters)
 data = response.json()['articles']
 articles_list = data[:3]
 print(articles_list)
 
-#TODO 7. - Use Python slice operator to create a list that contains the first 3 articles. Hint: https://stackoverflow.com/questions/509211/understanding-slice-notation
+
+formatted_articles = [f"Headline: {article['title']}. \nBrief: {article['description']}" for article in articles_list]
 
 
-
-
-    ## STEP 3: Use twilio.com/docs/sms/quickstart/python
-    #to send a separate message with each article's title and description to your phone number.
-
-#TODO 8. - Create a new list of the first 3 article's headline and description using list comprehension.
-
-#TODO 9. - Send each article as a separate message via Twilio.
-
+client = Client(TWILIO_SID, TWILIO_AUTH)
+for article in formatted_articles:
+  message = client.messages.create(
+    body=article,
+    from_="+18449441591",
+    to=
+  )
 
 
 #Optional TODO: Format the message like this:
